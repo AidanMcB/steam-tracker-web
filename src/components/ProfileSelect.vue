@@ -94,6 +94,12 @@ const profiles = ref([
         avatarUrl:
             'https://avatars.steamstatic.com/f0d0a2c8389d061926b54b3638aca4ee7de1a50e_medium.jpg',
     },
+    {
+        name: 'reversible frog',
+        code: import.meta.env.VITE_REVERSIBLE_FROG_STEAM_ID,
+        avatarUrl:
+            'https://avatars.steamstatic.com/d0ccc5fb1be823b679809dbf13780791e62b9b98_medium.jpg',
+    },
     // {
     //     name: 'Itchycat9800',
     //     code: import.meta.env.VITE_ITCHY_CAT_STEAM_ID,
