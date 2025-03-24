@@ -1,7 +1,6 @@
 import httpClient from './httpClient';
 import { handleApiError } from '../utils/helper';
 import type { AxiosError } from 'axios';
-import type { GameInfo } from '../ts/SteamGame.types';
 import type { SearchUsersResponse } from './ts/SteamUser.types.api';
 
 

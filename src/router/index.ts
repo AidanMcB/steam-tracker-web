@@ -10,14 +10,6 @@ const routes = [
             title: 'Home - Steam Tracker'
         }
     },
-    {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: () => import('../views/Dashboard/Dashboard.vue'),
-        meta: {
-            title: 'Dashboard - Steam Tracker'
-        }
-    },
     // Redirect any unmatched routes to home
     {
         path: '/:pathMatch(.*)*',
@@ -31,7 +23,7 @@ const router = createRouter({
 });
 
 // Update document title based on route meta
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
     document.title = to.meta.title as string || 'Steam Tracker';
     next();
 });

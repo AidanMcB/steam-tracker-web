@@ -60,9 +60,9 @@ export const useSteamUserStore = defineStore('steam', () => {
     }
 
     // Helper function to ensure IDs are strings
-    function normalizeId(id: any): string {
-        return id?.toString() || '';
-    }
+    // function normalizeId(id: any): string {
+    //     return id?.toString() || '';
+    // }
 
     async function getUserStatsSummary(steamId: string): Promise<UserStats> {
         try {

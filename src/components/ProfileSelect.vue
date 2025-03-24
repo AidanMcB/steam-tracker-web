@@ -56,7 +56,7 @@ const setSelectedProfile = async (profile: any) => {
     selectedProfile.value = profile.name;
     console.log('ran this', profile.code);
     try {
-        const resp = await steamUserStore.getUserStatsSummary(profile.code);
+        await steamUserStore.getUserStatsSummary(profile.code);
     } catch (error) {
         console.error(error);
     }

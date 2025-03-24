@@ -1,4 +1,4 @@
-import type { GameInfo, PlaytimeSummary, RecentGame } from "../../ts/SteamGame.types";
+import type { GameInfo } from "../../ts/SteamGame.types";
 import type { SteamUser, UserStats } from "../../ts/SteamUser.types";
 
 export interface SearchUsersResponse {

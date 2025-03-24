@@ -102,7 +102,7 @@ onMounted(async () => {
 
 async function getUserSummaryData(): Promise<void> {
     try {
-        const resp = await steamUserStore.getUserStatsSummary(
+        await steamUserStore.getUserStatsSummary(
             import.meta.env.VITE_DANGER_DUCK_STEAM_ID
         );
     } catch (error) {
@@ -161,17 +161,6 @@ const setTopGamesChartData = () => {
     ];
 
     const borderColors = [
-        'rgb(249, 115, 22)',
-        'rgb(6, 182, 212)',
-        'rgb(107, 114, 128)',
-        'rgb(139, 92, 246)',
-        'rgb(236, 72, 153)',
-        'rgb(34, 197, 94)',
-        'rgb(59, 130, 246)',
-        'rgb(234, 179, 8)',
-    ];
-
-    const colors = [
         'rgb(249, 115, 22)',
         'rgb(6, 182, 212)',
         'rgb(107, 114, 128)',
