@@ -88,5 +88,17 @@ const profiles = ref([
         avatarUrl:
             'https://avatars.steamstatic.com/df02d2ddb9a28b44b2c7fa483bea99c53913d50b_medium.jpg',
     },
+    {
+        name: 'Schlub MaKonky',
+        code: import.meta.env.VITE_SCHLUB_STEAM_ID,
+        avatarUrl:
+            'https://avatars.steamstatic.com/f0d0a2c8389d061926b54b3638aca4ee7de1a50e_medium.jpg',
+    },
+    // {
+    //     name: 'Itchycat9800',
+    //     code: import.meta.env.VITE_ITCHY_CAT_STEAM_ID,
+    //     avatarUrl:
+    //         'https://avatars.steamstatic.com/f0d0a2c8389d061926b54b3638aca4ee7de1a50e_medium.jpg',
+    // },
 ]);
 </script>
