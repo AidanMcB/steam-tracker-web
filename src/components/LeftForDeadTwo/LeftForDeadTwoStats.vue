@@ -1,20 +1,31 @@
 <template>
-    <template v-if="selectedUser">
+    <template v-if="selectedUser && lfd2GameStats">
         <div class="card h-full">
             <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[30rem]" />
         </div>
     </template>
-    <template v-else>
+    <template v-else-if="!selectedUser">
         <h1>No user currently selected. </h1>
         <span>Select a user to see data.</span>
+    </template>
+    <template v-if='!lfd2GameStats && selectedUser'>
+        <p class="text-red-400 p-4 text-center">
+            Left For Dead 2 data is not accessible for <span class='text-purple-400'>
+                {{ selectedUser.personaName}} 
+            </span>.
+            <br/>
+            To see this user's data, set game data to Public on the user's steam profile.
+        </p>
     </template>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useSteamUserStore } from '../../stores/useSteamUserStore';
 import { useGameStore } from '../../stores/useSteamGameStore';
 import { storeToRefs } from 'pinia';
+import type { GameplayStats } from '../../ts/SteamGame.types';
+
 const gameStore = useGameStore();
 const { lfd2GameStats } = storeToRefs(gameStore);
 
@@ -27,9 +38,8 @@ onMounted(async () => {
     if (selectedUser.value) {
         try {
             await gameStore.getLfd2Stats(selectedUser.value?.steamId);
-            console.log('Game Stats: ', lfd2GameStats.value)
         } catch (error) {
-            console.log('Failed to get LFD2 stats. Error: ', error)
+            console.error('Failed to get LFD2 stats. Error: ', error)
             // To Do: Display error in UI
         }
     }
@@ -46,32 +56,36 @@ value: 117
 const chartData = ref();
 const chartOptions = ref();
 
+const displayedStatsFirst = computed(() => {
+    return (lfd2GameStats.value?.sort((a: GameplayStats, b: GameplayStats) => a.value - b.value))?.slice(0, 100) as GameplayStats[] || []
+})
+const displayedStatsSecond = computed(() => {
+    return (lfd2GameStats.value?.sort((a: GameplayStats, b: GameplayStats) => a.value - b.value))?.slice(100, 200) as GameplayStats[] || []
+})
+
 const setChartData = () => {
     const documentStyle = getComputedStyle(document.documentElement);
 
     return {
-        labels: lfd2GameStats.value?.map(stat => stat.displayNameFormatted),
+        labels: displayedStatsFirst.value.map(stat => stat.displayNameFormatted),
         datasets: [
             {
-                label: 'Usage',
-                backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-                data: lfd2GameStats.value?.map(stat => stat.value),
+                label: 'Top 100',
+                backgroundColor: documentStyle.getPropertyValue('--purple-500'),
+                borderColor: documentStyle.getPropertyValue('--purple-500'),
+                data: displayedStatsFirst.value.map(stat => stat.value),
             },
             // {
-            //     label: 'My Second dataset',
-            //     backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-            //     borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-            //     data: [lfd2GameStats.value?.map(stat => stat.value)],
+            //     label: '101 - 200',
+            //     backgroundColor: documentStyle.getPropertyValue('--purple-500'),
+            //     borderColor: documentStyle.getPropertyValue('--purple-500'),
+            //     data: displayedStatsSecond.value.map(stat => stat.value),
             // },
         ],
     };
 };
 const setChartOptions = () => {
     const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--p-text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
     return {
         indexAxis: 'y',
@@ -79,29 +93,29 @@ const setChartOptions = () => {
         plugins: {
             legend: {
                 labels: {
-                    color: textColor,
+                    color: 'white',
                 },
             },
         },
         scales: {
             x: {
                 ticks: {
-                    color: textColorSecondary,
+                    color: '#fff',
                     font: {
-                        weight: 500,
+                        weight: 600,
                     },
                 },
                 grid: {
                     display: false,
-                    drawBorder: false,
+                    drawBorder: true,
                 },
             },
             y: {
                 ticks: {
-                    color: textColorSecondary,
+                    color: '#fffaaa',
                 },
                 grid: {
-                    color: surfaceBorder,
+                    color: '#9333ea',
                     drawBorder: false,
                 },
             },

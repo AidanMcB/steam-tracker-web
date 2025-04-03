@@ -7,7 +7,7 @@
             :responsiveOptions="responsiveOptions"
             :page="activeProfileIndex"
             :pt="{
-                root: { class: ['w-full'] },
+                root: { class: ['w-full pt-4'] },
                 previousbutton: { class: ['text-white text-purple-200'] },
                 nextbutton: { class: ['text-white text-purple-200'] },
             }"
@@ -75,7 +75,12 @@ const activeProfile = computed(() => {
 })
 
 const activeProfileIndex = computed(() => {
-    return profiles.value.findIndex((profile: UserProfile) => profile.code === selectedUser.value?.steamId)
+    const index = profiles.value.findIndex((profile: UserProfile) => profile.code === selectedUser.value?.steamId)
+    if (index > -1) {
+        return index
+    } else {
+        return 0
+    }
 })
 
 const setSelectedProfile = async (profile: UserProfile) => {

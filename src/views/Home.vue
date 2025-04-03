@@ -10,7 +10,7 @@
         <SplitterPanel>
             <ProfileSelect />
         </SplitterPanel>
-        <SplitterPanel>
+        <SplitterPanel :pt="{ root: ['pt-4']}">
             <SelectButton
                 v-model="activeView"
                 :options="viewOptions"
