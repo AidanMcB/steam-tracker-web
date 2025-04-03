@@ -2,12 +2,12 @@
     <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
         <h2 class="text-xl font-bold mb-4 dark:text-white flex items-center">
             <img
-                :src="userStats?.profile?.avatarmedium"
+                :src="selectedUser?.avatarMedium"
                 alt="User Avatar"
                 class="w-12 h-12 rounded-full"
             />
             <span v-if="userStats" class="text-2xl font-bold text-white text-center ml-4">{{
-                userStats.profile.personaname
+                userStats.profile.personaName
             }}</span>
         </h2>
 
@@ -87,28 +87,14 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useSteamUserStore } from '../stores/useSteamUserStore';
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import type { GameInfo } from '../ts/SteamGame.types';
 import Chart from 'primevue/chart';
 
 const steamUserStore = useSteamUserStore();
 
-const { userStats } = storeToRefs(steamUserStore);
+const { userStats, selectedUser } = storeToRefs(steamUserStore);
 
-onMounted(async () => {
-    await getUserSummaryData();
-    updateChartData();
-});
-
-async function getUserSummaryData(): Promise<void> {
-    try {
-        await steamUserStore.getUserStatsSummary(
-            import.meta.env.VITE_DANGER_DUCK_STEAM_ID
-        );
-    } catch (error) {
-        console.error(error);
-    }
-}
 
 // Watch for changes in userStats and update chart data
 watch(

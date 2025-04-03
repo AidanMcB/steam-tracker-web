@@ -1,3 +1,5 @@
+import type { GameAchievementsAndInGameStatsV2 } from "../../ts/SteamGame.types";
+
 export interface GamePlaytimeData {
     appId: string;
     name: string;
@@ -8,3 +10,6 @@ export interface GamePlaytimeData {
     error?: boolean;         // flag for error state
     lastPlayed?: number;     // last played date
 }
+
+export type GameAchievementsAndInGameStatsApiV2 = GameAchievementsAndInGameStatsV2
+
