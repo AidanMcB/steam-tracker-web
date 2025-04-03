@@ -110,7 +110,7 @@ export const useSteamUserStore = defineStore('steam', () => {
         }
     }
 
-    watch(selectedUser, async (newUser, oldUser) => {
+    watch(selectedUser, async (newUser) => {
         if (newUser) {
             try {
                 await getUserStatsSummary(newUser?.steamId);

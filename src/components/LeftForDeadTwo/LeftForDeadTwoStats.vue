@@ -59,9 +59,9 @@ const chartOptions = ref();
 const displayedStatsFirst = computed(() => {
     return (lfd2GameStats.value?.sort((a: GameplayStats, b: GameplayStats) => a.value - b.value))?.slice(0, 100) as GameplayStats[] || []
 })
-const displayedStatsSecond = computed(() => {
-    return (lfd2GameStats.value?.sort((a: GameplayStats, b: GameplayStats) => a.value - b.value))?.slice(100, 200) as GameplayStats[] || []
-})
+// const displayedStatsSecond = computed(() => {
+//     return (lfd2GameStats.value?.sort((a: GameplayStats, b: GameplayStats) => a.value - b.value))?.slice(100, 200) as GameplayStats[] || []
+// })
 
 const setChartData = () => {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -85,7 +85,6 @@ const setChartData = () => {
     };
 };
 const setChartOptions = () => {
-    const documentStyle = getComputedStyle(document.documentElement);
 
     return {
         indexAxis: 'y',

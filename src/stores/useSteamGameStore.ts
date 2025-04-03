@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { onMounted, ref } from "vue";
 import * as steamGameApi from '../api/steamGame.api';
-import type { GameAchievement, GameAchievementsAndInGameStatsV2, GameplayInfoSchem, GameplayStats, InGameStat } from "../ts/SteamGame.types";
+import type { GameAchievementsAndInGameStatsV2, GameplayInfoSchem, GameplayStats, InGameStat } from "../ts/SteamGame.types";
 import * as gameStats from '../assets/gameData/lfd2/gameStats.json';
 
 export const useGameStore = defineStore('gameStore', () => {
     const lfd2Achievements = ref();
-    const lfd2WeaponStats = ref();
+    // const lfd2WeaponStats = ref();
     const lfd2GameStats = ref<GameplayStats[]>();
 
     const lfd2GameStatsSchema = ref<GameplayInfoSchem>()
@@ -19,16 +19,16 @@ export const useGameStore = defineStore('gameStore', () => {
         try {
             const resp: GameAchievementsAndInGameStatsV2 = await steamGameApi.getL4d2UserStats(steamId);
             formatLfd2GameStats(resp.playerstats.stats)
-            formatLfd2Achievements(resp.playerstats.achievements);
+            // formatLfd2Achievements(resp.playerstats.achievements);
             return resp;
         } catch (error) {
             throw new Error(error as string);
         }
     }
 
-    function formatLfd2Achievements(achievements: GameAchievement[]): void {
+    // function formatLfd2Achievements(achievements: GameAchievement[]): void {
 
-    }
+    // }
 
     function formatLfd2GameStats(stats: InGameStat[]): void {
         if (!lfd2GameStatsSchema.value) return;
