@@ -1,68 +1,98 @@
 <template>
     <div class="card flex justify-center flex-wrap bg-gray-800 rounded-lg">
-        <span class="text-white mt-4">Select a gamer</span>
-        <Listbox
-            v-model="selectedProfile"
-            :options="profiles"
-            multiple
-            optionLabel="name"
-            optionGroupLabel="label"
-            optionGroupChildren="items"
-            class="w-full md:w-56 my-2 dark:bg-gray-800 rounded-lg shadow"
+        <Carousel
+            :value="profiles"
+            :numVisible="3"
+            :numScroll="3"
+            :responsiveOptions="responsiveOptions"
+            :page="activeProfileIndex"
             :pt="{
-                root: {
-                    class: ['ark:bg-gray-800 rounded-lg'],
-                },
-                itemgroup: {
-                    class: '!text-white p-0',
-                },
+                root: { class: ['w-full pt-4'] },
+                previousbutton: { class: ['text-white text-purple-200'] },
+                nextbutton: { class: ['text-white text-purple-200'] },
             }"
         >
-            <template #optiongroup="slotProps">
+            <template #item="slotProps">
                 <div
-                    @click="setSelectedProfile(slotProps.option)"
-                    class="flex items-center dark:bg-gray-700 shadow hover:bg-gray-600 hover:cursor-pointer my-2"
+                    @click="setSelectedProfile(slotProps.data)"
+                    class="border-2 border-purple-400 dark:border-surface-700 rounded m-2 p-4 flex items-center hover:cursor-pointer active:bg-purple-500"
                     :class="{
-                        '!bg-purple-500': slotProps.option.name === selectedProfile?.name,
+                        'bg-purple-700': slotProps.data.name === activeProfile?.name,
                     }"
                 >
                     <img
-                        :alt="slotProps.option.name"
-                        :src="slotProps.option.avatarUrl"
-                        style="width: 42px"
+                        :src="slotProps.data.avatarUrl"
+                        :alt="slotProps.data.name"
+                        class="rounded"
                     />
-                    <div class="ml-2">{{ slotProps.option.name }}</div>
+                    <div class="font-medium text-white text-center w-full">
+                        {{ slotProps.data.name }}
+                    </div>
                 </div>
             </template>
-        </Listbox>
+        </Carousel>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useSteamUserStore } from '../stores/useSteamUserStore';
+import Carousel from 'primevue/carousel';
+import type { UserProfile } from '../ts/SteamUser.types';
+import { storeToRefs } from 'pinia';
+
+const responsiveOptions = ref([
+    {
+        breakpoint: '1400px',
+        numVisible: 2,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '1199px',
+        numVisible: 3,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '767px',
+        numVisible: 2,
+        numScroll: 1,
+    },
+    {
+        breakpoint: '575px',
+        numVisible: 1,
+        numScroll: 1,
+    },
+]);
 
 const steamUserStore = useSteamUserStore();
+const { selectedUser } = storeToRefs(steamUserStore);
 
-const selectedProfile = ref({
-    name: 'DangerDuck',
-    code: import.meta.env.VITE_DANGER_DUCK_STEAM_ID,
-    avatarUrl:
-        'https://avatars.steamstatic.com/2efcc523af3dc561179833e0dd2520c91b96b1ee_medium.jpg',
-});
 
-const setSelectedProfile = async (profile: any) => {
-    console.log('profile option: ', profile);
-    selectedProfile.value = profile;
+const activeProfile = computed(() => {
+    if (activeProfileIndex.value) {
+        return profiles.value[activeProfileIndex.value];
+    }
+})
+
+const activeProfileIndex = computed(() => {
+    const index = profiles.value.findIndex((profile: UserProfile) => profile.code === selectedUser.value?.steamId)
+    if (index > -1) {
+        return index
+    } else {
+        return 0
+    }
+})
+
+const setSelectedProfile = async (profile: UserProfile) => {
     try {
-        await steamUserStore.getUserStatsSummary(profile.code);
+        await steamUserStore.setSelectedProfile(profile.code);
     } catch (error) {
         console.error(error);
     }
 };
 
 // uses avatarmedium from steam api
-const profiles = ref([
+const profiles = ref<UserProfile[]>([
     {
         name: 'Agent Weasroy',
         code: import.meta.env.VITE_WEASROY_STEAM_ID,
@@ -107,4 +137,5 @@ const profiles = ref([
     //         'https://avatars.steamstatic.com/f0d0a2c8389d061926b54b3638aca4ee7de1a50e_medium.jpg',
     // },
 ]);
+
 </script>

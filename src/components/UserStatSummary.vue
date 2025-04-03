@@ -1,22 +1,22 @@
 <template>
     <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-        <h2 class="text-xl font-bold mb-4 dark:text-white flex items-center">
+        <h2 v-if="userStats?.playtimeSummary && !isUserStatLoading" class="text-xl font-bold mb-4 dark:text-white flex items-center">
             <img
-                :src="userStats?.profile?.avatarmedium"
+                :src="selectedUser?.avatarMedium"
                 alt="User Avatar"
                 class="w-12 h-12 rounded-full"
             />
-            <span v-if="userStats" class="text-2xl font-bold text-white text-center ml-4">{{
-                userStats.profile.personaname
+            <span class="text-2xl font-bold text-white text-center ml-4">{{
+                userStats.profile.personaName
             }}</span>
         </h2>
 
-        <div v-if="!userStats?.playtimeSummary" class="flex justify-center p-6">
+        <div v-if="!userStats?.playtimeSummary && isUserStatLoading" class="flex justify-center p-6">
             <i class="pi pi-spin pi-spinner text-3xl"></i>
             <span class="ml-2">Loading your gaming stats...</span>
         </div>
 
-        <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div v-else-if="userStats?.playtimeSummary && !isUserStatLoading" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="p-4 bg-purple-50 dark:bg-gray-700 rounded-lg text-center">
                 <h3 class="text-lg font-medium mb-2 dark:text-white">Total Games</h3>
                 <p class="text-3xl font-bold text-purple-700 dark:text-purple-300">
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="mb-6">
+        <div v-if="userStats?.playtimeSummary && !isUserStatLoading"class="mb-6">
             <h3 class="text-lg font-semibold mb-3 dark:text-white">Your Top Games</h3>
             <div class="card h-[600px]">
                 <Chart
@@ -82,33 +82,23 @@
                 </div>
             </div>
         </div>
+
+        <div v-if="!userStats?.playtimeSummary && !isUserStatLoading && !selectedUser">
+            <p class="text-center text-gray-400">Select a user to see their stats</p>
+        </div>
+
     </div>
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useSteamUserStore } from '../stores/useSteamUserStore';
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import type { GameInfo } from '../ts/SteamGame.types';
 import Chart from 'primevue/chart';
 
 const steamUserStore = useSteamUserStore();
 
-const { userStats } = storeToRefs(steamUserStore);
-
-onMounted(async () => {
-    await getUserSummaryData();
-    updateChartData();
-});
-
-async function getUserSummaryData(): Promise<void> {
-    try {
-        await steamUserStore.getUserStatsSummary(
-            import.meta.env.VITE_DANGER_DUCK_STEAM_ID
-        );
-    } catch (error) {
-        console.error(error);
-    }
-}
+const { userStats, selectedUser, isUserStatLoading } = storeToRefs(steamUserStore);
 
 // Watch for changes in userStats and update chart data
 watch(

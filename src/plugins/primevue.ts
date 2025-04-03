@@ -31,6 +31,7 @@ import Menu from 'primevue/menu';
 import Menubar from 'primevue/menubar';
 import MultiSelect from 'primevue/multiselect';
 import Password from 'primevue/password';
+import SelectButton from 'primevue/selectbutton';
 import Tag from 'primevue/tag';
 import Textarea from 'primevue/textarea';
 import Toast from 'primevue/toast';
@@ -228,6 +229,7 @@ export default {
         app.component('Message', Message);
         app.component('MultiSelect', MultiSelect);
         app.component('Password', Password);
+        app.component('SelectButton', SelectButton);
         app.component('Tag', Tag);
         app.component('Textarea', Textarea);
         app.component('Toast', Toast);
